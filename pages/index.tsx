@@ -86,7 +86,7 @@ const Page: NextPage<Props> = ({ repos }) => {
                 {repos.map((repo) => (
                   <tr key={repo.name}>
                     <td>
-                      <Link href={`/repo/${repo.name}`}>
+                      <Link href={`https://github.com/apxxxxxxe/${repo.name}`}>
                         <a>{repo.name}</a>
                       </Link>
                     </td>
