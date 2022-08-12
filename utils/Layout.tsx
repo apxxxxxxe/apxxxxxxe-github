@@ -28,7 +28,7 @@ export default function Layout({
   contentDirection = "row",
 }): JSX.Element {
   const router = useRouter();
-  const siteTitle = "おわらない";
+  const siteTitle = "apxxxxxxe-github";
 
   let pageTitle: string;
   if (title !== "") {
@@ -55,15 +55,11 @@ export default function Layout({
       <div id="wrapper">
         <div id="header">
           <div className="blog-title">
-            <h1>おわらない</h1>
-            <p>伺か関連の配布物を置くところ</p>
+            <h1>apxxxxxxe-github</h1>
+            <p>apxxxxxxeのgithub情報</p>
           </div>
         </div>
-        <div id="menu">
-          {menuItem("index", router.pathname)}
-          {menuItem("tips", router.pathname)}
-          {menuItem("blog", router.pathname)}
-        </div>
+        <div id="menu"></div>
         <div id="container" className={contentClass}>
           {children}
         </div>
