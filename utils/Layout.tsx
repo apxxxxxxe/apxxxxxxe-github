@@ -65,7 +65,6 @@ export default function Layout({
             <p>apxxxxxxeのgithub情報</p>
           </div>
         </div>
-        <div id="menu"></div>
         <div id="container" className={contentClass}>
           {children}
         </div>
