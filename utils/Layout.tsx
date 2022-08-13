@@ -38,8 +38,14 @@ export default function Layout({
   }
 
   let contentClass = "flex-row flex-row-center";
-  if (contentDirection !== "row") {
-    contentClass = "flex-column flex-column-center";
+  switch (contentDirection) {
+    case "row":
+      break;
+    case "column":
+      contentClass = "flex-column flex-column-center";
+      break;
+    default:
+      contentClass = "flex-row";
   }
 
   return (

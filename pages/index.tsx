@@ -53,9 +53,7 @@ export async function getServerSideProps() {
   });
 
   result.sort((a, b) => {
-    return (
-      new Date(b.lastPushed).getTime() - new Date(a.lastPushed).getTime()
-    );
+    return new Date(b.lastPushed).getTime() - new Date(a.lastPushed).getTime();
   });
 
   return {
