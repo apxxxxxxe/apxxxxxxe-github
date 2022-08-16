@@ -1,9 +1,7 @@
 import { NextPage, InferGetStaticPropsType } from "next";
-import React from "react";
+import React, { Suspense, useEffect } from "react";
 import Link from "next/link";
-import fetch from "node-fetch";
 import Layout from "utils/Layout";
-import { join } from "path";
 
 type Props = {
   repos: Repo[];
@@ -28,47 +26,43 @@ function formatDate(date: string) {
   return d.toLocaleDateString();
 }
 
-export async function getServerSideProps() {
-  const res = await fetch(
-    "https://api.github.com/users/apxxxxxxe/repos?per_page=100&page=1"
-  );
-  const json = (await res.json()) as RepoData[];
-  const result = new Array<Repo>();
+function RepoTable() {
+	const defaultUser = "apxxxxxxe";
+	const [user, setUser] = React.useState(defaultUser);
+	const [data, setData] = React.useState([]);
+	const [repos, setRepos] = React.useState([] as Repo[]);
+	
+	useEffect(() => {
+		const fetchData = async () => {
+			const json = await fetch(
+				`https://api.github.com/users/apxxxxxxe/repos?per_page=100&page=1`, {method: 'GET'}
+			).then((res) => res.json()) as RepoData[];
 
-  console.log(json);
+			const result = new Array<Repo>();
+			json.forEach((repo) => {
+				result.push({
+					name: repo.name,
+					description: repo.description,
+					lastPushed: repo.pushed_at,
+					lastUpdated: repo.updated_at,
+				});
+			});
 
-  json.forEach((repo) => {
-    result.push({
-      name: repo.name,
-      description: repo.description,
-      lastPushed: repo.pushed_at,
-      lastUpdated: repo.updated_at,
-    });
-  });
+			result.sort((a, b) => {
+				return new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime();
+			});
 
-  result.sort((a, b) => {
-    return (
-      new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime()
-    );
-  });
+			result.sort((a, b) => {
+				return new Date(b.lastPushed).getTime() - new Date(a.lastPushed).getTime();
+			});
 
-  result.sort((a, b) => {
-    return new Date(b.lastPushed).getTime() - new Date(a.lastPushed).getTime();
-  });
+			setRepos(result);
+		}
+		fetchData();
+	}, []);
 
-  return {
-    props: {
-      repos: result,
-    },
-  };
-}
-
-const Page: NextPage<Props> = ({ repos }) => {
-  console.log(repos);
-  return (
-    <Layout title="" contentDirection="row">
-      <div className="content main-container">
-        <h1>LIST</h1>
+	return (
+		<>
         <div className="table-box">
           <div className="table-wrapper">
             <table>
@@ -97,6 +91,16 @@ const Page: NextPage<Props> = ({ repos }) => {
             </table>
           </div>
         </div>
+		</>
+	)
+}
+
+const Page: NextPage<Props> = () => {
+  return (
+    <Layout title="" contentDirection="row">
+      <div className="content main-container">
+        <h1>LIST</h1>
+		<RepoTable />
       </div>
     </Layout>
   );
