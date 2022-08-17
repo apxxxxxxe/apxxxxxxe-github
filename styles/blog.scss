@@ -553,10 +553,12 @@ img {
 }
 
 .desc-box {
-	margin-left: 1.5rem;
-	p,section,form {
-		margin: 0;
-	}
+  margin-left: 1.5rem;
+  p,
+  section,
+  form {
+    margin: 0;
+  }
 }
 
 @media (orientation: portrait) {

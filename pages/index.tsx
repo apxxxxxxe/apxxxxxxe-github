@@ -26,8 +26,8 @@ type ResponceData = {
 };
 
 type Props = {
-	user: string;
-}
+  user: string;
+};
 
 function formatDate(date: string) {
   const d = new Date(date);
@@ -109,12 +109,12 @@ function RepoTable(props: PropsWithChildren<Props>) {
 
   return (
     <>
-	  <div className="desc-box">
-		<>
-		{props.children}
-		{responceData}
-		</>
-	  </div>
+      <div className="desc-box">
+        <>
+          {props.children}
+          {responceData}
+        </>
+      </div>
       <div className="table-box">
         <div className="table-wrapper">
           <table>
@@ -163,21 +163,21 @@ function NameForm() {
   };
 
   return (
-    <>
-      <RepoTable user={user} >
-		<form onSubmit={handleSubmit}>
-			<label htmlFor="user">
-			username:{" "}
-			<input
-				type="text"
-				id="user"
-				value={value}
-				onChange={handleChange}
-			/>
-			</label>
-		</form>
-	  </RepoTable>
-    </>
+    <Suspense fallback={<p>Fetching {user}...</p>}>
+      <RepoTable user={user}>
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="user">
+            username:{" "}
+            <input
+              type="text"
+              id="user"
+              value={value}
+              onChange={handleChange}
+            />
+          </label>
+        </form>
+      </RepoTable>
+    </Suspense>
   );
 }
 
