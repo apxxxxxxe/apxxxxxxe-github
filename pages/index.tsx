@@ -3,6 +3,8 @@ import React, { Suspense, useEffect } from "react";
 import Link from "next/link";
 import Layout from "utils/Layout";
 
+const defaultUser = "apxxxxxxe";
+
 type Props = {
   repos: Repo[];
 };
@@ -21,78 +23,156 @@ type RepoData = {
   updated_at: string;
 };
 
+type ResponceData = {
+  rateLimit: string;
+  rateLimitRemaining: string;
+  rateLimitReset: Date;
+};
+
 function formatDate(date: string) {
   const d = new Date(date);
   return d.toLocaleDateString();
 }
 
-function RepoTable() {
-	const defaultUser = "apxxxxxxe";
-	const [user, setUser] = React.useState(defaultUser);
-	const [data, setData] = React.useState([]);
-	const [repos, setRepos] = React.useState([] as Repo[]);
-	
-	useEffect(() => {
-		const fetchData = async () => {
-			const json = await fetch(
-				`https://api.github.com/users/apxxxxxxe/repos?per_page=100&page=1`, {method: 'GET'}
-			).then((res) => res.json()) as RepoData[];
+function toInt(value: string) {
+  const int = parseInt(value);
+  if (isNaN(int)) {
+    return 0;
+  }
+  return int;
+}
 
-			const result = new Array<Repo>();
-			json.forEach((repo) => {
-				result.push({
-					name: repo.name,
-					description: repo.description,
-					lastPushed: repo.pushed_at,
-					lastUpdated: repo.updated_at,
-				});
-			});
+function RepoTable(props) {
+  const [repos, setRepos] = React.useState([] as Repo[]);
+  const [resData, setResData] = React.useState({} as ResponceData);
 
-			result.sort((a, b) => {
-				return new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime();
-			});
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch(
+        `https://api.github.com/users/${props.user}/repos?per_page=100&page=1`,
+        { method: "GET" }
+      );
 
-			result.sort((a, b) => {
-				return new Date(b.lastPushed).getTime() - new Date(a.lastPushed).getTime();
-			});
+      setResData({
+        rateLimit: res.headers.get("x-ratelimit-limit"),
+        rateLimitRemaining: res.headers.get("x-ratelimit-remaining"),
+        rateLimitReset: new Date(
+          toInt(res.headers.get("x-ratelimit-reset")) * 1000
+        ),
+      } as ResponceData);
 
-			setRepos(result);
-		}
-		fetchData();
-	}, []);
+      const result = new Array<Repo>();
+      if (res.ok) {
+        (await res.json()).forEach((repo) => {
+          result.push({
+            name: repo.name,
+            description: repo.description,
+            lastPushed: repo.pushed_at,
+            lastUpdated: repo.updated_at,
+          });
+        });
 
-	return (
-		<>
-        <div className="table-box">
-          <div className="table-wrapper">
-            <table>
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Description</th>
-                  <th>Last Updated</th>
-                  <th>Last Pushed</th>
+        result.sort((a, b) => {
+          return (
+            new Date(b.lastUpdated).getTime() -
+            new Date(a.lastUpdated).getTime()
+          );
+        });
+
+        result.sort((a, b) => {
+          return (
+            new Date(b.lastPushed).getTime() - new Date(a.lastPushed).getTime()
+          );
+        });
+      } else {
+        result.push({
+          name: "Error",
+          description: "Error",
+          lastPushed: new Date().toLocaleDateString(),
+          lastUpdated: new Date().toLocaleDateString(),
+        });
+      }
+
+      setRepos(result);
+    };
+    fetchData();
+  }, [props.user]);
+
+  const responceData = Object.keys(resData).length ? (
+    <p>
+      Remaining API Rate: {resData.rateLimitRemaining}/{resData.rateLimit} (it
+      will reset at {resData.rateLimitReset.toLocaleString()})
+    </p>
+  ) : (
+    <></>
+  );
+
+  return (
+    <>
+      {responceData}
+      <div className="table-box">
+        <div className="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Last Updated</th>
+                <th>Last Pushed</th>
+              </tr>
+            </thead>
+            <tbody>
+              {repos.map((repo) => (
+                <tr key={repo.name}>
+                  <td>
+                    <Link
+                      href={`https://github.com/${props.user}/${repo.name}`}
+                    >
+                      <a>{repo.name}</a>
+                    </Link>
+                  </td>
+                  <td>{repo.description}</td>
+                  <td>{formatDate(repo.lastUpdated)}</td>
+                  <td>{formatDate(repo.lastPushed)}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {repos.map((repo) => (
-                  <tr key={repo.name}>
-                    <td>
-                      <Link href={`https://github.com/apxxxxxxe/${repo.name}`}>
-                        <a>{repo.name}</a>
-                      </Link>
-                    </td>
-                    <td>{repo.description}</td>
-                    <td>{formatDate(repo.lastUpdated)}</td>
-                    <td>{formatDate(repo.lastPushed)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         </div>
-		</>
-	)
+      </div>
+    </>
+  );
+}
+
+function NameForm() {
+  const [value, setValue] = React.useState(defaultUser);
+  const [user, setUser] = React.useState(defaultUser);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setUser(value);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+  };
+
+  return (
+    <>
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="user">
+          username:{" "}
+          <input
+            type="text"
+            id="user"
+            value={value}
+            onChange={handleChange}
+          />
+        </label>
+      </form>
+      <RepoTable user={user} />
+    </>
+  );
 }
 
 const Page: NextPage<Props> = () => {
@@ -100,7 +180,7 @@ const Page: NextPage<Props> = () => {
     <Layout title="" contentDirection="row">
       <div className="content main-container">
         <h1>LIST</h1>
-		<RepoTable />
+        <NameForm />
       </div>
     </Layout>
   );

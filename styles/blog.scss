@@ -115,7 +115,8 @@ h6 {
 }
 
 p,
-section {
+section,
+form {
   margin: 0 1.5rem;
   font-size: 1rem;
   line-height: calc(var(--min-lineheight) * 1);
@@ -266,12 +267,8 @@ a:hover {
     rgba(255, 255, 255, 0.1) -2px 2px 0px inset;
 }
 
-#header::after {
-}
-
 #header,
 #header * {
-  z-index: 2;
 }
 
 #footer {
@@ -287,18 +284,16 @@ a:hover {
 }
 
 #container {
-  z-index: -2;
-  position:relative;
-  background-image: url("/fog.jpg");
-  background-size: cover;
+  position: relative;
+  background-color: var(--color-black);
 }
 
 #container h1:first-child {
   margin-top: 0;
 }
 
-#container::after {
-  z-index: -1;
+/*
+#container::before {
   content: "";
   position: absolute;
   top: 0;
@@ -310,9 +305,9 @@ a:hover {
   background-image: linear-gradient(to bottom, #ffffff00, var(--color-darkgray)), linear-gradient(to top, #ffffff00, var(--color-darkgray)), url("/rain.gif");
   background-repeat: cover;
 }
+*/
 
 .content {
-  z-index: 2;
   padding: 2.5rem;
   box-sizing: border-box;
   background-color: var(--color-darkgray);
@@ -323,7 +318,7 @@ a:hover {
 
 .main-container {
   min-height: calc(100vh - var(--header-height) - var(--footer-height));
-  width: 90%;
+  max-width: 90%;
   margin-right: 1rem;
 }
 
