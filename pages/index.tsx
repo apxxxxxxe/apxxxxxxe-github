@@ -1,13 +1,9 @@
 import { NextPage, InferGetStaticPropsType } from "next";
-import React, { Suspense, useEffect } from "react";
+import React, { PropsWithChildren, Suspense, useEffect } from "react";
 import Link from "next/link";
 import Layout from "utils/Layout";
 
 const defaultUser = "apxxxxxxe";
-
-type Props = {
-  repos: Repo[];
-};
 
 type Repo = {
   name: string;
@@ -29,6 +25,10 @@ type ResponceData = {
   rateLimitReset: Date;
 };
 
+type Props = {
+	user: string;
+}
+
 function formatDate(date: string) {
   const d = new Date(date);
   return d.toLocaleDateString();
@@ -42,7 +42,7 @@ function toInt(value: string) {
   return int;
 }
 
-function RepoTable(props) {
+function RepoTable(props: PropsWithChildren<Props>) {
   const [repos, setRepos] = React.useState([] as Repo[]);
   const [resData, setResData] = React.useState({} as ResponceData);
 
@@ -109,7 +109,12 @@ function RepoTable(props) {
 
   return (
     <>
-      {responceData}
+	  <div className="desc-box">
+		<>
+		{props.children}
+		{responceData}
+		</>
+	  </div>
       <div className="table-box">
         <div className="table-wrapper">
           <table>
@@ -159,18 +164,19 @@ function NameForm() {
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="user">
-          username:{" "}
-          <input
-            type="text"
-            id="user"
-            value={value}
-            onChange={handleChange}
-          />
-        </label>
-      </form>
-      <RepoTable user={user} />
+      <RepoTable user={user} >
+		<form onSubmit={handleSubmit}>
+			<label htmlFor="user">
+			username:{" "}
+			<input
+				type="text"
+				id="user"
+				value={value}
+				onChange={handleChange}
+			/>
+			</label>
+		</form>
+	  </RepoTable>
     </>
   );
 }
