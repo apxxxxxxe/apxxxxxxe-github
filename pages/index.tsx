@@ -100,7 +100,7 @@ function RepoTable(props: PropsWithChildren<Props>) {
 
   const responceData = Object.keys(resData).length ? (
     <p>
-      Remaining API Rate: {resData.rateLimitRemaining}/{resData.rateLimit} (it
+      API Limit: {resData.rateLimitRemaining} / {resData.rateLimit} (it
       will reset at {resData.rateLimitReset.toLocaleString()})
     </p>
   ) : (
