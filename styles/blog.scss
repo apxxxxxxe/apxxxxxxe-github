@@ -561,6 +561,21 @@ img {
   }
 }
 
+input {
+	background-color: var(--color-black);
+    color: var(--color-white);
+    border-radius: 15px;
+    padding: 0.1rem 0.5rem;
+    margin: 0 0.25rem;
+	border: 1px solid rgba(0, 0, 0, 0.5);
+	box-shadow: rgba(0, 0, 0, 0.2) -1px 1px 5px inset,
+		rgba(255, 255, 255, 0.1) -1px 2px 1px;
+}
+
+input:focus {
+	outline:none;
+}
+
 @media (orientation: portrait) {
   html,
   body {
