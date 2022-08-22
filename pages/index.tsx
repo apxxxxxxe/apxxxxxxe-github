@@ -1,4 +1,4 @@
-import { NextPage, InferGetStaticPropsType } from "next";
+import { NextPage } from "next";
 import React, { PropsWithChildren, Suspense, useEffect } from "react";
 import Link from "next/link";
 import Layout from "utils/Layout";
