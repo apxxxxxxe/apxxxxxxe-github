@@ -188,6 +188,20 @@ const Page: NextPage<Props> = () => {
         <h1>LIST</h1>
         <NameForm />
       </div>
+      <div className="description-container">
+		<h2>説明</h2>
+		<p>　GitHub APIを利用して任意のユーザのpublicリポジトリ情報を取得します。</p>
+		<p>　各リポジトリはLast Pushed順に並んでいます。</p>
+		<p>　最近触っていないリポジトリの確認などにお役立てください。</p>
+		<ul>
+			<li>
+				usernameを入力し、Enterキーで取得します。
+			</li>
+			<li>
+				API Limitにご注意ください。
+			</li>
+		</ul>
+      </div>
     </Layout>
   );
 };

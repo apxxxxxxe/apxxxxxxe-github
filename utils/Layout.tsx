@@ -61,14 +61,14 @@ export default function Layout({
       <div id="wrapper">
         <div id="header">
           <div className="blog-title">
-            <h1>apxxxxxxe-github</h1>
-            <p>apxxxxxxeのgithub情報</p>
+            <h1>GitHub RepoInfo</h1>
+            <p>GitHubのリポジトリ情報を取得するツール</p>
           </div>
         </div>
         <div id="container" className={contentClass}>
           {children}
         </div>
-        <div id="footer"></div>
+        <div id="footer"><div>developed by <a href="https://github.com/apxxxxxxe/apxxxxxxe-github">apxxxxxxe</a></div></div>
       </div>
     </>
   );

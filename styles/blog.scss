@@ -274,6 +274,9 @@ a:hover {
 #footer {
   box-sizing: border-box;
   margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   min-height: var(--footer-height);
   background-color: var(--color-black);
@@ -574,6 +577,10 @@ input {
 
 input:focus {
 	outline:none;
+}
+
+.description-container {
+	max-width: 20%;
 }
 
 @media (orientation: portrait) {
