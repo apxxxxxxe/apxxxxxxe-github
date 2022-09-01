@@ -267,10 +267,6 @@ a:hover {
     rgba(255, 255, 255, 0.1) -2px 2px 0px inset;
 }
 
-#header,
-#header * {
-}
-
 #footer {
   box-sizing: border-box;
   margin: 0 auto;
@@ -294,21 +290,6 @@ a:hover {
 #container h1:first-child {
   margin-top: 0;
 }
-
-/*
-#container::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height:100%;
-  background-image: linear-gradient(to bottom, #ffffff00, var(--color-darkgray)), linear-gradient(to top, #ffffff00, var(--color-darkgray)), url("/rain.gif");
-  background-repeat: cover;
-}
-*/
 
 .content {
   padding: 2.5rem;
@@ -565,6 +546,7 @@ img {
 }
 
 input {
+	width: 10rem;
 	background-color: var(--color-black);
     color: var(--color-white);
     border-radius: 15px;
